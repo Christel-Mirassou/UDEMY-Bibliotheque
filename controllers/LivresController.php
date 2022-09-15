@@ -1,5 +1,5 @@
 <?php
-require_once "livreManager.class.php";
+require_once "models/livreManager.class.php";
 
 class LivresController
 {
