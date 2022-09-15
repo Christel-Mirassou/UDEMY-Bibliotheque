@@ -1,12 +1,16 @@
-<!-- Démarrage d'un buffer -->
-<?php ob_start() ?>
-
-<p>Contenu de la page d'accueil</p>
-
-
+<!-- Fichier de routeur -->
 <?php
-$titre = "Bibliothèque MGA";
-// on déverse dans le buffer tout le contenu du buffer démarré ligne 2
-$content = ob_get_clean();
-require "template.php";
-?>
+
+//Mise en place d'un système de routage 
+if (empty($_GET['page'])) {
+    require "views/accueil.view.php";
+}else{
+    switch($_GET['page']){
+        case "accueil":
+            require "views/accueil.view.php";
+            break;
+        case "livres":
+            require "views/livres.view.php";
+            break;
+    }
+}

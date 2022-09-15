@@ -1,0 +1,9 @@
+# Réécriture des URL
+RewriteEngine On
+
+# Conditions pour empécher d'aller sur un fichier ou un dossier
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# Règle d'écriture des URL
+RewriteRule ^(.*)$ index.php?page=$1
