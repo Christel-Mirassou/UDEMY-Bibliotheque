@@ -5,20 +5,24 @@ require_once "Livre.class.php";
 
 // cette classe sera en charge de la liste des livres
 // elle hérite de la classe Model
-class LivreManager extends Model{
+class LivreManager extends Model
+{
     //tableau de livres
     private $livres;
 
-    public function ajoutLivre($livre){
+    public function ajoutLivre($livre)
+    {
         $this->livres[] = $livre;
     }
 
-    public function getLivres(){
+    public function getLivres()
+    {
         return $this->livres;
     }
 
     //Fonction qui permet de récupérer tous les livres présents en BDD
-    public function chargementLivres(){
+    public function chargementLivres()
+    {
         //requète à la Bdd
         $req = $this->getBdd()->prepare("SELECT * FROM livres");
         $req->execute();
@@ -33,8 +37,9 @@ class LivreManager extends Model{
     }
 
     //Fonction qui permet de cherche un livre en BDD grâce à son id
-    public function getLivreById($id){
-        for ($i=0; $i < count($this->livres); $i++) { 
+    public function getLivreById($id)
+    {
+        for ($i = 0; $i < count($this->livres); $i++) {
             if ($this->livres[$i]->getId() === $id) {
                 return $this->livres[$i];
             }
@@ -42,18 +47,19 @@ class LivreManager extends Model{
     }
 
     //Fonction qui permet d'ajouter le livre en BDD
-    public function ajouterLivreBdd($titre, $nbPages, $image){
+    public function ajouterLivreBdd($titre, $nbPages, $image)
+    {
         //on défini la requète pour insérer en BDD
         $req = "INSERT INTO livres (titre, nbPages, image) VALUES (:titre, :nbPages, :image)";
-        
+
         //on prépare la requète
         $stmt = $this->getBdd()->prepare($req);
-        
+
         // on utilise la fonction bindValue pour sécuriser les données
         $stmt->bindValue(':titre', $titre, PDO::PARAM_STR);
         $stmt->bindValue(':nbPages', $nbPages, PDO::PARAM_INT);
         $stmt->bindValue(':image', $image, PDO::PARAM_STR);
-        
+
         //on exécute la requète 
         $resultat = $stmt->execute();
 
@@ -69,8 +75,29 @@ class LivreManager extends Model{
             $this->ajoutLivre($livre);
         }
     }
+
+    //Fonction qui permet de supprimer un livre en BDD
+    public function supprimerLivreBdd($id)
+    {
+        //on définie la requète
+        $req = "DELETE FROM livres WHERE id = :id";
+
+        //on prépare la requète
+        $stmt = $this->getBdd()->prepare($req);
+
+        //on sécurise les données
+        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+
+        //on exécute la requète
+        $resultat = $stmt->execute();
+
+        //on referme la connexion
+        $stmt->closeCursor();
+
+        //on supprime le livre du tableau de livres
+        //on vérifie que le livre a bien été supprimé en BDD
+        if ($resultat > 0) {
+            unset($this->livres[$id]);
+        }
+    }
 }
-
-
-
-

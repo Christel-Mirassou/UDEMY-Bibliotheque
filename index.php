@@ -38,7 +38,7 @@ try {
                 } elseif ($url[1] == "modifier") {
                     echo "modifier un livre";
                 } elseif ($url[1] == "supprimer") {
-                    echo "supprimer un livre";
+                    $livresController->supprimerLivre($url[2]);
                 }elseif ($url[1] == "valider") {
                     $livresController->ajouterLivreValidation();
                 } else {

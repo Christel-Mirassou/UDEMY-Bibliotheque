@@ -102,4 +102,21 @@ class LivresController
             return ($random."_".$file['name']);
         }
     }
+
+    //Fonction qui permet de supprimer un livre
+    public function supprimerLivre($id){
+        //on récupère l'image du livre grâce à son id 
+        $nomImage = $this->livreManager->getLivreById($id)->getImage();
+
+        //on supprime l'image dans le répertoire
+        unlink("public/images/".$nomImage);
+
+        //on supprime l'image en Bdd
+        $this->livreManager->supprimerLivreBdd($id);
+
+        //on redirige vers la page des livres
+        header("Location: ". URL . "livres");
+    }
+
+
 }
