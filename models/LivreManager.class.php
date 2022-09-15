@@ -77,8 +77,7 @@ class LivreManager extends Model
     }
 
     //Fonction qui permet de supprimer un livre en BDD
-    public function supprimerLivreBdd($id)
-    {
+    public function supprimerLivreBdd($id){
         //on définie la requète
         $req = "DELETE FROM livres WHERE id = :id";
 
@@ -97,7 +96,38 @@ class LivreManager extends Model
         //on supprime le livre du tableau de livres
         //on vérifie que le livre a bien été supprimé en BDD
         if ($resultat > 0) {
-            unset($this->livres[$id]);
+            $livre = $this->getLivreById($id);
+            unset($livre);
+        }
+    }
+
+    //Fonction qui permet de modifier un livre en BDD
+    public function modifierLivreBdd($id, $titre, $nbPages, $image)
+    {
+        //on définie la requète
+        $req = "UPDATE livres SET titre = :titre, nbPages = :nbPages, image = :image WHERE id = :id";
+
+        //on prépare la requète
+        $stmt = $this->getBdd()->prepare($req);
+
+        //on sécurise les données
+        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+        $stmt->bindValue(':titre', $titre, PDO::PARAM_STR);
+        $stmt->bindValue(':nbPages', $nbPages, PDO::PARAM_INT);
+        $stmt->bindValue(':image', $image, PDO::PARAM_STR);
+
+        //on exécute la requète
+        $resultat = $stmt->execute();
+
+        //on referme la connexion
+        $stmt->closeCursor();
+
+        //on modifie le livre du tableau de livres
+        //on vérifie que le livre a bien été modifié en BDD
+        if ($resultat > 0) {
+            $this->getLivreById($id)->setTitre($titre);
+            $this->getLivreById($id)->setNbPages($nbPages);
+            $this->getLivreById($id)->setImage($image);
         }
     }
 }

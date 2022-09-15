@@ -51,7 +51,7 @@ class LivresController
         $this->livreManager->ajouterLivreBdd($_POST['titre'], $_POST['nbPages'], $nomImageAjoutee);
 
         //on redirige vers la page des livres
-        header("Location: ". URL . "livres");
+        header("Location: " . URL . "livres");
     }
 
     //Fonction qui traite les informations d'une image pour pouvoir l'enregistrer en BDD. 
@@ -64,9 +64,9 @@ class LivresController
             throw new Exception("Vous devez choisir une image");
         }
 
-        //ensuite on vérifie si le répertoire qui doit recevoir l'image existe ou non 
-        if(!file_exists($dir)){
-            //s'il n'existe pas alors il va le créer avec les droits 0777: accessilble à tous 
+        //ensuite on vérifie si le répertoire qui doit recevoir l'image existe ou non
+        if (!file_exists($dir)) {
+            //s'il n'existe pas alors il va le créer avec les droits 0777: accessilble à tous
             mkdir($dir, 0777);
         }
 
@@ -75,48 +75,93 @@ class LivresController
         //on ajoute un chiffre aléatoire pour éviter les doublons
         $random = rand(0, 99999);
         //on crée le nom de l'image
-        $target_file = $dir.$random."_".$file['name'];
+        $target_file = $dir . $random . "_" . $file['name'];
 
-        //différents tests pour vérifier que tout marche bien 
-        //on vérifie que l'image ne est une 
-        if(!getimagesize($file['tmp_name'])){
+        //différents tests pour vérifier que tout marche bien
+        //on vérifie que l'image ne est une
+        if (!getimagesize($file['tmp_name'])) {
             throw new Exception("Le fichier n'est pas une image");
         }
         //on vérifie que l'extension de l'image est bonne
-        if($extension != "jpg" && $extension != "png" && $extension != "jpeg" && $extension != "gif"){
+        if ($extension != "jpg" && $extension != "png" && $extension != "jpeg" && $extension != "gif") {
             throw new Exception("Seules les images au format jpg, jpeg, png et gif sont autorisées");
         }
         //on vérifie que le fichier n'existe pas déjà
-        if(file_exists($target_file)){
+        if (file_exists($target_file)) {
             throw new Exception("Le fichier existe déjà");
         }
         //on vérifie que l'image n'est pas trop lourde
-        if($file['size'] > 500000){
+        if ($file['size'] > 500000) {
             throw new Exception("Le fichier est trop lourd");
         }
         //on vérifie que le fichier a bien été uploadé
-        if(!move_uploaded_file($file['tmp_name'], $target_file)){
+        if (!move_uploaded_file($file['tmp_name'], $target_file)) {
             throw new Exception("L'image n'a pas été uploadée");
-        }else{
+        } else {
             //si tout est ok alors on peut ajouter l'image en BDD
-            return ($random."_".$file['name']);
+            return ($random . "_" . $file['name']);
         }
     }
 
     //Fonction qui permet de supprimer un livre
-    public function supprimerLivre($id){
+    public function supprimerLivre($id)
+    {
         //on récupère l'image du livre grâce à son id 
         $nomImage = $this->livreManager->getLivreById($id)->getImage();
 
         //on supprime l'image dans le répertoire
-        unlink("public/images/".$nomImage);
+        unlink("public/images/" . $nomImage);
 
         //on supprime l'image en Bdd
         $this->livreManager->supprimerLivreBdd($id);
 
         //on redirige vers la page des livres
-        header("Location: ". URL . "livres");
+        header("Location: " . URL . "livres");
     }
+
+    //Fonction qui permet de modifier un livre
+    public function modifierLivre($id)
+    {
+        //on commence par récupérer toutes les informations livre à modifier grâce à son id
+        $livre = $this->livreManager->getLivreById($id);
+        require "views/modifierLivre.view.php";
+    }
+
+    //Fonction qui permet de valider la modification d'un livre
+    public function modifierLivreValidation(){
+        //on récupère l'image 
+        $imageActuelle = $this->livreManager->getLivreById($_POST['id'])->getImage();
+        
+        //on vérifie que l'utilisateur à bien choisi une image
+        $file = $_FILES['image'];
+        if($file['size'] > 0){
+            //si oui alors on supprime l'ancienne image
+            unlink("public/images/" . $imageActuelle);
+            //on ajoute la nouvelle image
+            $repertoire = "public/images/";
+            $nomImageAjoutee = $this->ajouterImage($file, $repertoire);
+        }else{
+            //si non alors on garde l'ancienne image
+            $nomImageAjoutee = $imageActuelle;
+        }
+
+        //on modifie le livre en BDD
+        $this->livreManager->modifierLivreBdd($_POST['id'], $_POST['titre'], $_POST['nbPages'], $nomImageAjoutee);
+
+        //on redirige vers la page des livres
+        header("Location: " . URL . "livres");
+
+    }
+
+
+
+
+
+
+
+
+
+
 
 
 }

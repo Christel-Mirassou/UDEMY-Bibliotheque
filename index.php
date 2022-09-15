@@ -36,11 +36,13 @@ try {
                 } elseif ($url[1] == "ajouter") {
                     $livresController->ajouterLivre(); 
                 } elseif ($url[1] == "modifier") {
-                    echo "modifier un livre";
+                    $livresController->modifierLivre($url[2]);
                 } elseif ($url[1] == "supprimer") {
                     $livresController->supprimerLivre($url[2]);
                 }elseif ($url[1] == "valider") {
                     $livresController->ajouterLivreValidation();
+                } elseif ($url[1] == "validerModification") {
+                    $livresController->modifierLivreValidation();
                 } else {
                     throw new Exception("Cette page n'existe pas");
                 }
