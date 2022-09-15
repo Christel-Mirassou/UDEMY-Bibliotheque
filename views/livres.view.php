@@ -1,9 +1,5 @@
 <!-- Démarrage d'un buffer -->
 <?php
-require "LivreManager.class.php";
-$livreManager = new LivreManager;
-$livreManager->chargementLivres();
-
 ob_start();
 ?>
 
@@ -18,9 +14,8 @@ ob_start();
     </thead>
     <tbody>
         <?php
-        $livres = $livreManager->getLivres();
 
-        for ($i = 0; $i < count($livreManager->getLivres()); $i++) : ?>
+        for ($i = 0; $i < count($livres); $i++) : ?>
             <tr>
                 <td class="align-middle"><img src="public/images/<?= $livres[$i]->getImage(); ?>" alt="algo" width="60px;"></td>
                 <td class="align-middle"><?= $livres[$i]->getTitre(); ?></td>
