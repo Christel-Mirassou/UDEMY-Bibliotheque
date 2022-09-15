@@ -32,7 +32,7 @@ try {
                     //on appelle la fonction qui permet d'afficher les livres présente dans le controller
                     $livresController->afficherLivres();
                 } elseif ($url[1] == "afficher") {
-                    echo "afficher un livre";
+                    echo $livresController->afficherLivre($url[2]);
                 } elseif ($url[1] == "ajouter") {
                     echo "ajouter un livre";
                 } elseif ($url[1] == "modifier") {

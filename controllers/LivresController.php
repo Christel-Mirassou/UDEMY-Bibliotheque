@@ -22,4 +22,12 @@ class LivresController
         //$livres est maintenant accessible dans la vue
         require "views/livres.view.php";
     }
+
+    //Fonction qui peremt d'afficher un livre trouvé grâce à son id 
+    public function afficherLivre($id){
+        //pour cela on doit utiliser une fonction définie dans le livreManager car concerne les datas
+        $livre = $this->livreManager->getLivreById($id);
+        //On peut appeler la vue pour afficher le livre
+        require "views/afficherLivre.view.php";
+    }
 }

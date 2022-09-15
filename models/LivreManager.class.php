@@ -32,6 +32,15 @@ class LivreManager extends Model{
         }
     }
 
+    //Fonction qui permet de cherche un livre en BDD grâce à son id
+    public function getLivreById($id){
+        for ($i=0; $i < count($this->livres); $i++) { 
+            if ($this->livres[$i]->getId() === $id) {
+                return $this->livres[$i];
+            }
+        }
+    }
+
 }
 
 
