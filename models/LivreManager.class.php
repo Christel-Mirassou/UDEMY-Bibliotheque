@@ -41,6 +41,34 @@ class LivreManager extends Model{
         }
     }
 
+    //Fonction qui permet d'ajouter le livre en BDD
+    public function ajouterLivreBdd($titre, $nbPages, $image){
+        //on défini la requète pour insérer en BDD
+        $req = "INSERT INTO livres (titre, nbPages, image) VALUES (:titre, :nbPages, :image)";
+        
+        //on prépare la requète
+        $stmt = $this->getBdd()->prepare($req);
+        
+        // on utilise la fonction bindValue pour sécuriser les données
+        $stmt->bindValue(':titre', $titre, PDO::PARAM_STR);
+        $stmt->bindValue(':nbPages', $nbPages, PDO::PARAM_INT);
+        $stmt->bindValue(':image', $image, PDO::PARAM_STR);
+        
+        //on exécute la requète 
+        $resultat = $stmt->execute();
+
+        //on referme la connexion
+        $stmt->closeCursor();
+
+        //on ajoute le livre au tableau de livres 
+        //On vérifie que le livre a bien été ajouté en BDD
+        if ($resultat > 0) {
+            //on récupère l'id du livre ajouté en BDD par le dernier id inséré
+            $livre = new Livre($this->getBdd()->lastInsertId(), $titre, $nbPages, $image);
+            //on ajoute le livre au tableau de livres
+            $this->ajoutLivre($livre);
+        }
+    }
 }
 
 

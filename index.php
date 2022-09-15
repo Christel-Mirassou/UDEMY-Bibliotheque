@@ -32,13 +32,15 @@ try {
                     //on appelle la fonction qui permet d'afficher les livres présente dans le controller
                     $livresController->afficherLivres();
                 } elseif ($url[1] == "afficher") {
-                    echo $livresController->afficherLivre($url[2]);
+                    $livresController->afficherLivre($url[2]);
                 } elseif ($url[1] == "ajouter") {
-                    echo "ajouter un livre";
+                    $livresController->ajouterLivre(); 
                 } elseif ($url[1] == "modifier") {
                     echo "modifier un livre";
                 } elseif ($url[1] == "supprimer") {
                     echo "supprimer un livre";
+                }elseif ($url[1] == "valider") {
+                    $livresController->ajouterLivreValidation();
                 } else {
                     throw new Exception("Cette page n'existe pas");
                 }

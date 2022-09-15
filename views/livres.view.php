@@ -27,7 +27,7 @@ ob_start();
 
     </tbody>
 </table>
-<a href="" class="btn btn-success d-block">Ajouter</a>
+<a href="<?= URL ?>livres/ajouter" class="btn btn-success d-block">Ajouter</a>
 
 
 <?php
