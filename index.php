@@ -1,5 +1,8 @@
 <!-- Fichier de routeur -->
 <?php
+//mise en place de session_abort
+session_start();
+
 //constante qui définie une URL absolue
 define("URL", str_replace("index.php", "", (isset($_SERVER['HTTPS']) ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[PHP_SELF]"));
 
@@ -44,13 +47,14 @@ try {
                 } elseif ($url[1] == "validerModification") {
                     $livresController->modifierLivreValidation();
                 } else {
-                    throw new Exception("Cette page n'existe pas");
+                    throw new Exception("Page introuvable");
                 }
                 break;
             default:
-                throw new Exception("Cette page n'existe pas");
+                throw new Exception("Page introuvable");
         }
     }
 } catch (Exception $e) {
-    echo $e->getMessage();
+    $messageErreur = $e->getMessage();
+    require "views/error.view.php";
 }

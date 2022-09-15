@@ -1,7 +1,17 @@
 <!-- Démarrage d'un buffer -->
 <?php
 ob_start();
+
+//affichge de l'alerte de session 
+//on vérifie qu'il y a une alerte 
+if (!empty($_SESSION['alert'])) :
 ?>
+
+    <div class="alert alert-<?= $_SESSION['alert']['type'] ?>" role="alert">
+        <?= $_SESSION['alert']['message'] ?>
+    </div>
+
+<?php endif; ?>
 
 <table class="table text-center">
     <thead>

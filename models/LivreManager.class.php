@@ -44,6 +44,8 @@ class LivreManager extends Model
                 return $this->livres[$i];
             }
         }
+        //Si le livre n'est pas trouvé on retourne un message d'erreur
+        throw new Exception("Le livre n'existe pas");
     }
 
     //Fonction qui permet d'ajouter le livre en BDD

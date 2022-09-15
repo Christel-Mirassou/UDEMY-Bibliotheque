@@ -21,6 +21,9 @@ class LivresController
         $livres = $this->livreManager->getLivres();
         //$livres est maintenant accessible dans la vue
         require "views/livres.view.php";
+
+        //on vide le contenu de la variable alert sans quoi le message s'affichera continuellment
+        unset($_SESSION['alert']);
     }
 
     //Fonction qui peremt d'afficher un livre trouvé grâce à son id 
@@ -49,6 +52,12 @@ class LivresController
 
         //on ajoute le livre en BDD
         $this->livreManager->ajouterLivreBdd($_POST['titre'], $_POST['nbPages'], $nomImageAjoutee);
+
+        //on enregistre une information en session 
+        $_SESSION['alert'] = [
+            "type" => "success",   //définie la couleur du message affiché
+            "message" => "Le livre a bien été ajouté"
+        ];
 
         //on redirige vers la page des livres
         header("Location: " . URL . "livres");
@@ -115,6 +124,12 @@ class LivresController
         //on supprime l'image en Bdd
         $this->livreManager->supprimerLivreBdd($id);
 
+        //on enregistre une information en session 
+        $_SESSION['alert'] = [
+            "type" => "success",   //définie la couleur du message affiché
+            "message" => "Le livre a bien été supprimé"
+        ];
+
         //on redirige vers la page des livres
         header("Location: " . URL . "livres");
     }
@@ -128,19 +143,20 @@ class LivresController
     }
 
     //Fonction qui permet de valider la modification d'un livre
-    public function modifierLivreValidation(){
+    public function modifierLivreValidation()
+    {
         //on récupère l'image 
         $imageActuelle = $this->livreManager->getLivreById($_POST['id'])->getImage();
-        
+
         //on vérifie que l'utilisateur à bien choisi une image
         $file = $_FILES['image'];
-        if($file['size'] > 0){
+        if ($file['size'] > 0) {
             //si oui alors on supprime l'ancienne image
             unlink("public/images/" . $imageActuelle);
             //on ajoute la nouvelle image
             $repertoire = "public/images/";
             $nomImageAjoutee = $this->ajouterImage($file, $repertoire);
-        }else{
+        } else {
             //si non alors on garde l'ancienne image
             $nomImageAjoutee = $imageActuelle;
         }
@@ -148,20 +164,13 @@ class LivresController
         //on modifie le livre en BDD
         $this->livreManager->modifierLivreBdd($_POST['id'], $_POST['titre'], $_POST['nbPages'], $nomImageAjoutee);
 
+        //on enregistre une information en session 
+        $_SESSION['alert'] = [
+            "type" => "success",   //définie la couleur du message affiché
+            "message" => "Le livre a bien été modifié"
+        ];
+
         //on redirige vers la page des livres
         header("Location: " . URL . "livres");
-
     }
-
-
-
-
-
-
-
-
-
-
-
-
 }
